@@ -15,8 +15,6 @@ RUN set -ex && \
     pip install -r /tmp/requirements.txt && \
     rm -rf /root/.cache/
 COPY . /code
-
-RUN chmod +x /script.sh
 EXPOSE 8000
 
-CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "django_rest_api.wsgi"]
+CMD ["sh", "-c", "./script.sh && gunicorn --bind :8000 --workers 2 django_rest_api.wsgi"]
