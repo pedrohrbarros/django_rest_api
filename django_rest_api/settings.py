@@ -8,7 +8,7 @@ load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'custom_auth',
+    'sensor',
     'health_check',
     'health_check.db',
     'health_check.cache',
@@ -156,9 +157,6 @@ logger.addHandler(console_handler)
 HEALTH_CHECK = {
     'DISK_USAGE_MAX': 90,  # percent
     'MEMORY_MIN': 100,    # in MB
-    'CUSTOM': [
-        'health_check.custom.UserHealthCheckBackend',
-    ]
 }
 
 MAX_LOGIN_ATTEMPTS = 5

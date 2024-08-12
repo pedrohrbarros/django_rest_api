@@ -1,6 +1,5 @@
 from django_rest_api import settings
 from rest_framework.response import Response
-from rest_framework.views import APIView
 from rest_framework.generics import GenericAPIView
 from .serializer import CustomUserSerializer
 from rest_framework.permissions import AllowAny
@@ -14,7 +13,6 @@ import os
 import logging
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-from django.views.decorators.csrf import csrf_exempt
 
 class LoginUserView(GenericAPIView):
   permission_classes = [AllowAny]
@@ -183,7 +181,7 @@ class CustomUserView(GenericAPIView):
     try:
       payload = jwt.decode(token, 'secret', algorithms = ["HS256"])
     except jwt.ExpiredSignatureError:
-      return Resppnse({
+      return Response({
         'Message': 'Expired Token'
       }, status = status.HTTP_410_GONE)
     user = CustomUser.objects.filter(id=payload['id'],is_active=True).first()
