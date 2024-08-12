@@ -18,7 +18,6 @@ COPY . /code
 
 RUN python3 manage.py makemigrations
 RUN python3 manage.py migrate --noinput
-RUN python3 manage.py collectstatic --noinput
 RUN python manage.py test
 EXPOSE 8000
 
