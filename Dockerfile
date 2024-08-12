@@ -1,13 +1,22 @@
-FROM python:3.11-alpine
+ARG PYTHON_VERSION=3.11-slim-bullseye
 
-WORKDIR /app
+FROM python:${PYTHON_VERSION}
 
-COPY ./requirements.txt .
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
 
-RUN pip install -r requirements.txt
+RUN mkdir -p /code
 
-COPY . .
+WORKDIR /code
 
-RUN chmod +x /app/script.sh
+COPY requirements.txt /tmp/requirements.txt
+RUN set -ex && \
+    pip install --upgrade pip && \
+    pip install -r /tmp/requirements.txt && \
+    rm -rf /root/.cache/
+COPY . /code
 
-CMD ["./script.sh"]
+RUN chmod +x /script.sh
+EXPOSE 8000
+
+CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "django_rest_api.wsgi"]
