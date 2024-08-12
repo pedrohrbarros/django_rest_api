@@ -15,6 +15,11 @@ RUN set -ex && \
     pip install -r /tmp/requirements.txt && \
     rm -rf /root/.cache/
 COPY . /code
+
+RUN python3 manage.py makemigrations
+RUN python3 manage.py migrate --noinput
+RUN python3 manage.py collectstatic --noinput
+RUN python manage.py test
 EXPOSE 8000
 
-CMD ["sh", "-c", "./script.sh && gunicorn --bind :8000 --workers 2 django_rest_api.wsgi"]
+CMD ["gunicorn", "--bind", ":8000", "--workers", "2", "django_rest_api.wsgi"]
