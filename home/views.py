@@ -1,7 +1,6 @@
 from django.shortcuts import render
-from django.template import loader
-from django.http import HttpResponse
+from sensor.models import Equipment
 
 def home(request):
-  template = loader.get_template('home.html')
-  return HttpResponse(template.render())
+  items = Equipment.objects.all()
+  return render(request, 'home.html', {'labels': [item.equipmentId for item in items], 'data': [item.value for item in items], 'timestamps': [str(item.timestamp) for item in items]})

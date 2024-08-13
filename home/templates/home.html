@@ -1,18 +1,310 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home</title>
-    <link rel="stylesheet" href="{% static 'home/styles.css' %}">
-</head>
-<body>
-    <header>
-        <h1>Welcome to My Homepage</h1>
-    </header>
-    <main>
-        <p>This is the homepage of my Django REST Framework project.</p>
-    </main>
-</body>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Dashboard</title>
+    <link rel="stylesheet" href="{% static 'home/css/style.css' %}">
+    <link rel="icon" href="{% static 'home/img/favicon.ico'%}" type="image/x-icon">
+  </head>
+  <body>
+    <div class="chart-container">
+      <canvas id="chartTotal"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chart24H"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chart48H"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartOneWeek"></canvas>
+    </div>
+    <div class="chart-container">
+      <canvas id="chartOneMonth"></canvas>
+    </div>
+  </body>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const total_chart_element = document.getElementById('chartTotal');
+    let total_chart = new Chart(total_chart_element, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Sensor values',
+          data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'Total sensor data',
+            padding: {
+                top: 10,
+                bottom: 30
+            }
+          },
+          tooltip: {
+            callbacks: {
+              title: function(items) {
+                const full_labels = {{ labels|safe }}
+                const full_timestamps = {{ timestamps|safe }}
+                var timestamp;
+                full_labels.map((label, index) => {
+                  if (label === items[0].label) {
+                    timestamp = full_timestamps[index]
+                  }
+                })
+                return `Time: ${timestamp.toLocaleString()}`
+              },
+              label: function(item) {
+                return `Value: ${item.formattedValue}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    const one_day_chart_element = document.getElementById('chart24H');
+    let one_day_chart = new Chart(one_day_chart_element, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Sensor values',
+          data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: '24h Sensor Data',
+            padding: {
+                top: 10,
+                bottom: 30
+            }
+          },
+          tooltip: {
+            callbacks: {
+              title: function(items) {
+                const full_labels = {{ labels|safe }}
+                const full_timestamps = {{ timestamps|safe }}
+                var timestamp;
+                full_labels.map((label, index) => {
+                  if (label === items[0].label) {
+                    timestamp = full_timestamps[index]
+                  }
+                })
+                return `Time: ${timestamp.toLocaleString()}`
+              },
+              label: function(item) {
+                return `Value: ${item.formattedValue}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    const two_day_chart_element = document.getElementById('chart48H');
+    let two_day_chart = new Chart(two_day_chart_element, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Sensor values',
+          data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: '48h Sensor Data',
+            padding: {
+                top: 10,
+                bottom: 30
+            }
+          },
+          tooltip: {
+            callbacks: {
+              title: function(items) {
+                const full_labels = {{ labels|safe }}
+                const full_timestamps = {{ timestamps|safe }}
+                var timestamp;
+                full_labels.map((label, index) => {
+                  if (label === items[0].label) {
+                    timestamp = full_timestamps[index]
+                  }
+                })
+                return `Time: ${timestamp.toLocaleString()}`
+              },
+              label: function(item) {
+                return `Value: ${item.formattedValue}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    const one_week_chart_element = document.getElementById('chartOneWeek');
+    let one_week_chart = new Chart(one_week_chart_element, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Sensor values',
+          data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'One week sensor data',
+            padding: {
+                top: 10,
+                bottom: 30
+            }
+          },
+          tooltip: {
+            callbacks: {
+              title: function(items) {
+                const full_labels = {{ labels|safe }}
+                const full_timestamps = {{ timestamps|safe }}
+                var timestamp;
+                full_labels.map((label, index) => {
+                  if (label === items[0].label) {
+                    timestamp = full_timestamps[index]
+                  }
+                })
+                return `Time: ${timestamp.toLocaleString()}`
+              },
+              label: function(item) {
+                return `Value: ${item.formattedValue}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    const one_month_chart_element = document.getElementById('chartOneMonth');
+    let one_month_chart = new Chart(one_month_chart_element, {
+      type: 'bar',
+      data: {
+        labels: {{ labels|safe }},
+        datasets: [{
+          label: 'Sensor values',
+          data: {{ data|safe }},
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        },
+        plugins: {
+          title: {
+            display: true,
+            text: 'One month sensor data',
+            padding: {
+                top: 10,
+                bottom: 30
+            }
+          },
+          tooltip: {
+            callbacks: {
+              title: function(items) {
+                const full_labels = {{ labels|safe }}
+                const full_timestamps = {{ timestamps|safe }}
+                var timestamp;
+                full_labels.map((label, index) => {
+                  if (label === items[0].label) {
+                    timestamp = full_timestamps[index]
+                  }
+                })
+                return `Time: ${timestamp.toLocaleString()}`
+              },
+              label: function(item) {
+                return `Value: ${item.formattedValue}`;
+              }
+            }
+          }
+        }
+      }
+    });
+    window.onload = function() {
+      const now = new Date()
+      let full_data = {{ data|safe }}
+      let full_timestamps = {{ timestamps|safe }}
+      let full_labels = {{ labels|safe }}
+      one_day_chart.data.labels = full_labels.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 24 * 60 * 60 * 1000;
+      })
+      one_day_chart.data.datasets[0].data = full_data.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 24 * 60 * 60 * 1000;
+      })
+      two_day_chart.data.labels = full_labels.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 48 * 60 * 60 * 1000;
+      })
+      two_day_chart.data.datasets[0].data = full_data.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 48 * 60 * 60 * 1000;
+      })
+      one_week_chart.data.labels = full_labels.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 7 * 24 * 60 * 60 * 1000;
+      })
+      one_week_chart.data.datasets[0].data = full_data.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 7 * 24 * 60 * 60 * 1000;
+      })
+      one_month_chart.data.labels = full_labels.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 30 * 24 * 60 * 60 * 1000;
+      })
+      one_month_chart.data.datasets[0].data = full_data.filter((_, index) => {
+        const date = new Date(full_timestamps[index])
+        return now - date <= 30 * 24 * 60 * 60 * 1000;
+      })
+      one_day_chart.update()
+      two_day_chart.update()
+      one_week_chart.update()
+      one_month_chart.update()
+    };
+  </script>
 </html>
