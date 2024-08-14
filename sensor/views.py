@@ -97,12 +97,10 @@ class EquipmentView(GenericAPIView):
       status.HTTP_406_NOT_ACCEPTABLE: openapi.Response(
         description = 'The content type provided in the header is not allowed',
         schema = openapi.Schema(
-          type = openapi.Schema(
-            type = openapi.TYPE_OBJECT,
-            properties = {
-              'Message': openapi.Schema(type = openapi.TYPE_STRING, description = 'Content type not allowed')
-            }
-          )
+          type = openapi.TYPE_OBJECT,
+          properties = {
+            'Message': openapi.Schema(type = openapi.TYPE_STRING, description = 'Content type not allowed')
+          }
         )
       )
     }

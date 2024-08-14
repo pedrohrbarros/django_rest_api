@@ -30,13 +30,17 @@
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script>
     const total_chart_element = document.getElementById('chartTotal');
+    const now = new Date()
+    let full_data = {{ data|safe }}
+    let full_timestamps = {{ timestamps|safe }}
+    let full_labels = {{ labels|safe }}
     let total_chart = new Chart(total_chart_element, {
       type: 'bar',
       data: {
-        labels: {{ labels|safe }},
+        labels: full_labels,
         datasets: [{
           label: 'Sensor values',
-          data: {{ data|safe }},
+          data: full_data,
           borderWidth: 1
         }]
       },
@@ -49,7 +53,7 @@
         plugins: {
           title: {
             display: true,
-            text: 'Total sensor data',
+            text: `Total sensor data - Average total value: ${ (full_data.reduce((acc, value) => acc + value, 0) / full_data.length).toFixed(2)}`,
             padding: {
                 top: 10,
                 bottom: 30
@@ -58,8 +62,6 @@
           tooltip: {
             callbacks: {
               title: function(items) {
-                const full_labels = {{ labels|safe }}
-                const full_timestamps = {{ timestamps|safe }}
                 var timestamp;
                 full_labels.map((label, index) => {
                   if (label === items[0].label) {
@@ -96,7 +98,19 @@
         plugins: {
           title: {
             display: true,
-            text: '24h Sensor Data',
+            text: `24h Sensor Data - Average 24 Sensor Data: ${ 
+              full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 24 * 60 * 60 * 1000;
+              }).length === 0 ? 0 :
+              (full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 24 * 60 * 60 * 1000;
+              }).reduce((acc, value) => acc + value, 0) / full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 24 * 60 * 60 * 1000;
+              }).length).toFixed(2)
+            }`,
             padding: {
                 top: 10,
                 bottom: 30
@@ -143,7 +157,19 @@
         plugins: {
           title: {
             display: true,
-            text: '48h Sensor Data',
+            text: `48h Sensor Data - Average 48 Sensor Data: ${ 
+              full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 48 * 60 * 60 * 1000;
+              }).length === 0 ? 0 :
+              (full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 48 * 60 * 60 * 1000;
+              }).reduce((acc, value) => acc + value, 0) / full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 48 * 60 * 60 * 1000;
+              }).length).toFixed(2)
+            }`,
             padding: {
                 top: 10,
                 bottom: 30
@@ -190,7 +216,19 @@
         plugins: {
           title: {
             display: true,
-            text: 'One week sensor data',
+            text: `One week sensor data - Average one week sensor data: ${ 
+              full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 7 * 24 * 60 * 60 * 1000;
+              }).length === 0 ? 0 :
+              (full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 7 * 24 * 60 * 60 * 1000;
+              }).reduce((acc, value) => acc + value, 0) / full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 7 * 24 * 60 * 60 * 1000;
+              }).length).toFixed(2)
+            }`,
             padding: {
                 top: 10,
                 bottom: 30
@@ -237,7 +275,19 @@
         plugins: {
           title: {
             display: true,
-            text: 'One month sensor data',
+            text: `One month sensor data - Average one month sensor data: ${ 
+              full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 30 * 24 * 60 * 60 * 1000;
+              }).length === 0 ? 0 :
+              (full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 30 * 24 * 60 * 60 * 1000;
+              }).reduce((acc, value) => acc + value, 0) / full_data.filter((_, index) => {
+                const date = new Date(full_timestamps[index])
+                return now - date <= 30 * 24 * 60 * 60 * 1000;
+              }).length).toFixed(2)
+            }`,
             padding: {
                 top: 10,
                 bottom: 30
@@ -265,10 +315,6 @@
       }
     });
     window.onload = function() {
-      const now = new Date()
-      let full_data = {{ data|safe }}
-      let full_timestamps = {{ timestamps|safe }}
-      let full_labels = {{ labels|safe }}
       one_day_chart.data.labels = full_labels.filter((_, index) => {
         const date = new Date(full_timestamps[index])
         return now - date <= 24 * 60 * 60 * 1000;
