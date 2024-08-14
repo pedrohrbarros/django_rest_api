@@ -53,7 +53,7 @@
         plugins: {
           title: {
             display: true,
-            text: `Total sensor data - Average total value: ${ (full_data.reduce((acc, value) => acc + value, 0) / full_data.length).toFixed(2)}`,
+            text: `Total sensor data - Average total value: ${ full_data.length === 0 ? 0 : (full_data.reduce((acc, value) => acc + value, 0) / full_data.length).toFixed(2)}`,
             padding: {
                 top: 10,
                 bottom: 30
